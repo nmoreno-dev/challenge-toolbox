@@ -30,7 +30,7 @@ function parse(fileData) {
     }
   }
 
-  // ninguna linea del archivo estaba completa
+  // ninguna linea del archivo estaba completa o libre de error
   if (lines.length <= 0) return null;
 
   return {

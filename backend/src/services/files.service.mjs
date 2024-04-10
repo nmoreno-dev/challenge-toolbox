@@ -20,7 +20,7 @@ async function listFiles() {
   } catch (error) {
     logger.error('Error al obtener los archivos del servicio');
     if (error instanceof AxiosError) {
-      logger.error(`Status: ${error.code} Message: ${error.message}`);
+      logger.error(`Status: ${error.status} Message: ${error.message}`);
     } else {
       console.error(error);
     }
@@ -41,7 +41,7 @@ async function getFileData(fileName) {
   } catch (error) {
     logger.error(`Error al obtener los datos del archivo ${fileName}`);
     if (error instanceof AxiosError) {
-      logger.error(`Status: ${error.code} Message: ${error.message}`);
+      logger.error(`Status: ${error.status} Message: ${error.message}`);
     } else {
       console.error(error);
     }

@@ -35,7 +35,6 @@ async function getFilesData(req, res) {
       logger.warn(`Ocurrio un error al obtener la información del archivo ${file}`);
       continue;
     }
-    console.log(fileData);
     const parsedData = dataParserService.parse(fileData);
 
     if (parsedData) {
