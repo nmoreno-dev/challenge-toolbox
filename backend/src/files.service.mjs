@@ -25,7 +25,7 @@ async function listFiles() {
   return null;
 }
 
-async function downloadFile(fileName) {
+async function getFileData(fileName) {
   if (typeof fileName !== 'string') return null;
 
   try {
@@ -35,7 +35,7 @@ async function downloadFile(fileName) {
       return response.data;
     }
   } catch (error) {
-    logger.error('Error al obtener los datos del archivo');
+    logger.error(`Error al obtener los datos del archivo ${fileName}`);
     console.error(error);
   }
 
@@ -44,5 +44,5 @@ async function downloadFile(fileName) {
 
 export default {
   listFiles,
-  downloadFile,
+  getFileData,
 };
