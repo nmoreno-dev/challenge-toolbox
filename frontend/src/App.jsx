@@ -1,36 +1,51 @@
-import React from 'react';
-import Accordion from 'react-bootstrap/Accordion';
+import React, { useState } from 'react';
+import MainTable from './components/MainTable';
+import Container from 'react-bootstrap/Container';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { useFileData, useFileList } from './hooks/files.hook';
 
 function App() {
+  const [selectedFileName, setSelectedFileName] = useState(null);
+
+  const { list, isLoading: isFileListLoading, error: listError } = useFileList();
+  const { data: filesData, isLoading: isFileDataLoading } = useFileData(selectedFileName);
+
   return (
     <div>
       <h1>Hello, React!</h1>
-      <Accordion defaultActiveKey="0">
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>Accordion Item #1</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="1">
-        <Accordion.Header>Accordion Item #2</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
+      {!isFileListLoading && list && (
+        <Container>
+          <Container>
+            <span>
+              <h2>Select a file</h2>
+              <Dropdown>
+                <Dropdown.Toggle
+                  variant={!!listError ? 'danger' : 'success'}
+                  id="dropdown-basic"
+                  disabled={!!listError}
+                >
+                  {selectedFileName || 'All Files'}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {list.map((item, i) => (
+                    <Dropdown.Item
+                      key={i}
+                      eventKey={i + 1}
+                      onClick={(e) => setSelectedFileName(e.target.innerText.split('.')[0])}
+                    >
+                      {item}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </span>
+          </Container>
+          <Container>
+            {isFileDataLoading ? <h1>Loading...</h1> : filesData && <MainTable files={filesData} />}
+          </Container>
+        </Container>
+      )}
     </div>
   );
 }

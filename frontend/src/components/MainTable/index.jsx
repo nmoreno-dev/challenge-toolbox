@@ -1,35 +1,28 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 
-const MainTable = () => {
+const MainTable = ({ files }) => {
   return (
     <Table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>File Name</th>
+          <th>Text</th>
+          <th>Number</th>
+          <th>Hex</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {files.map((fileData, i) =>
+          fileData.lines.map((line, j) => (
+            <tr key={i + '' + j + ''}>
+              <td>{fileData.file}</td>
+              <td>{line.text}</td>
+              <td>{line.number}</td>
+              <td>{line.hex}</td>
+            </tr>
+          ))
+        )}
       </tbody>
     </Table>
   );
