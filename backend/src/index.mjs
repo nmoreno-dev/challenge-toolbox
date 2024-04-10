@@ -1,5 +1,5 @@
 import express from 'express'
-import logger from './lib/logger'
+import logger from './lib/logger.mjs'
 
 const PORT = 5000
 
@@ -11,6 +11,6 @@ const PORT = 5000
     })
 
     server.listen(PORT, () => {
-        logger.info(`Servidor corriendo en el puerto`)
+        logger.info(`Servidor corriendo en el puerto ${PORT}`)
     })
 })()
