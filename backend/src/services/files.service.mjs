@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import logger from '../lib/logger.mjs';
 
 const TOKEN = 'aSuperSecretKey';
@@ -19,7 +19,11 @@ async function listFiles() {
     }
   } catch (error) {
     logger.error('Error al obtener los archivos del servicio');
-    console.error(error);
+    if (error instanceof AxiosError) {
+      logger.error(`Status: ${error.code} Message: ${error.message}`);
+    } else {
+      console.error(error);
+    }
   }
 
   return null;
@@ -36,7 +40,11 @@ async function getFileData(fileName) {
     }
   } catch (error) {
     logger.error(`Error al obtener los datos del archivo ${fileName}`);
-    console.error(error);
+    if (error instanceof AxiosError) {
+      logger.error(`Status: ${error.code} Message: ${error.message}`);
+    } else {
+      console.error(error);
+    }
   }
 
   return null;
