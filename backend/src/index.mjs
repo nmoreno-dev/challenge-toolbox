@@ -1,16 +1,16 @@
-import express from 'express'
-import logger from './lib/logger.mjs'
+import express from 'express';
+import logger from './lib/logger.mjs';
 
-const PORT = 5000
+const PORT = 5000;
 
-;(() => {
-    const server = express()
+(() => {
+  const server = express();
 
-    server.use('/', (_, res) => {
-        res.status(200).send()
-    })
+  server.use('/', (_, res) => {
+    res.status(200).send();
+  });
 
-    server.listen(PORT, () => {
-        logger.info(`Servidor corriendo en el puerto ${PORT}`)
-    })
-})()
+  server.listen(PORT, () => {
+    logger.info(`Servidor corriendo en el puerto ${PORT}`);
+  });
+})();
