@@ -14,16 +14,20 @@ function parse(fileData) {
     const columns = line.split(',');
 
     const [file, text, number, hex] = columns;
+    const parsedNumeber = parseInt(number, 10);
+    const parsedHex = parseInt(hex, 16);
 
-    if (file && text && number && hex) {
+    if (file && text && !isNaN(parsedNumeber) && !isNaN(parsedHex)) {
       // extrae el nombre del archivo por unica vez
       if (!fileName) fileName = file;
 
-      lines.push({
-        text,
-        number,
-        hex,
-      });
+      try {
+        lines.push({
+          text,
+          number,
+          hex,
+        });
+      } catch (error) {}
     }
   }
 
