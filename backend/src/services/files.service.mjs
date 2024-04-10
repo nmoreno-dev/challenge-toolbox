@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from 'axios';
-import logger from './lib/logger.mjs';
+import logger from '../lib/logger.mjs';
 
 const TOKEN = 'aSuperSecretKey';
 

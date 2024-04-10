@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
-import filesService from './files.service.mjs';
+import filesService from './services/files.service.mjs';
 import logger from './lib/logger.mjs';
-import dataParserService from './dataParser.service.mjs';
+import dataParserService from './services/dataParser.service.mjs';
 
 async function getFileList(_, res) {
   const data = await filesService.listFiles();
