@@ -20,13 +20,11 @@ function parse(fileData) {
       // extrae el nombre del archivo por unica vez
       if (!fileName) fileName = file;
 
-      try {
-        lines.push({
-          text,
-          number: parsedNumeber,
-          hex: parsedHex,
-        });
-      } catch (error) {}
+      lines.push({
+        text,
+        number: parsedNumeber,
+        hex,
+      });
     }
   }
 

@@ -29,14 +29,13 @@ async function getFilesData(req, res) {
   const { files } = filesList;
   const payload = [];
 
-  for (const file of files) {
-    const fileData = await filesService.getFileData(file);
-    if (fileData === null) {
-      logger.warn(`Ocurrio un error al obtener la información del archivo ${file}`);
-      continue;
-    }
-    const parsedData = dataParserService.parse(fileData);
+  const fileDataList = await Promise.all(files.map((file) => filesService.getFileData(file)));
 
+  for (const fileData of fileDataList) {
+    if (fileData === null) continue;
+    logger.debug(fileData);
+    const parsedData = dataParserService.parse(fileData);
+    logger.debug(parsedData);
     if (parsedData) {
       payload.push(parsedData);
     }
