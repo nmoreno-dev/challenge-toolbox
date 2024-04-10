@@ -29,13 +29,13 @@ async function getFilesData(req, res) {
   const { files } = filesList;
   const payload = [];
 
+  // realiza todas las peticiones a los datos de los archivos en paralelo, el manejo de errores en el
+  // service asegura que se resuelvan todas y el Promise.all no falle
   const fileDataList = await Promise.all(files.map((file) => filesService.getFileData(file)));
 
   for (const fileData of fileDataList) {
     if (fileData === null) continue;
-    logger.debug(fileData);
     const parsedData = dataParserService.parse(fileData);
-    logger.debug(parsedData);
     if (parsedData) {
       payload.push(parsedData);
     }
