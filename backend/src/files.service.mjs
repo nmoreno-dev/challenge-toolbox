@@ -18,7 +18,7 @@ async function listFiles() {
       return response.data;
     }
   } catch (error) {
-    logger.error('Error al obtener los archivos del servicio:');
+    logger.error('Error al obtener los archivos del servicio');
     console.error(error);
   }
 
@@ -35,7 +35,7 @@ async function downloadFile(fileName) {
       return response.data;
     }
   } catch (error) {
-    logger.error('Error al obtener los archivos del servicio:');
+    logger.error('Error al obtener los datos del archivo');
     console.error(error);
   }
 
