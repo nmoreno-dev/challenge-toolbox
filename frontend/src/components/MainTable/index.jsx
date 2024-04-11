@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 
 const MainTable = ({ files }) => {
   return (
-    <Table>
+    <Table responsive>
       <thead>
         <tr>
           <th>File Name</th>
