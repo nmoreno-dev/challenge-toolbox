@@ -17,6 +17,16 @@ async function getFileList(_, res) {
 }
 
 async function getFilesData(req, res) {
+  const { fileName } = req.query;
+
+  if (fileName) {
+    const fileData = await filesService.getFileData(fileName);
+    const parsedData = dataParserService.parse(fileData);
+    if (parsedData) {
+      return res.status(HttpStatusCode.Ok).json([parsedData]);
+    }
+  }
+
   const filesList = await filesService.listFiles();
   if (filesList === null) {
     res.status(HttpStatusCode.InternalServerError).json({
