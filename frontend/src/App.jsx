@@ -2,50 +2,65 @@ import React, { useState } from 'react';
 import MainTable from './components/MainTable';
 import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Spinner from 'react-bootstrap/Spinner';
 import { useFileData, useFileList } from './hooks/files.hook';
 
 function App() {
   const [selectedFileName, setSelectedFileName] = useState(null);
 
   const { list, isLoading: isFileListLoading, error: listError } = useFileList();
-  const { data: filesData, isLoading: isFileDataLoading } = useFileData(selectedFileName);
+  const {
+    data: filesData,
+    isLoading: isFileDataLoading,
+    error: filesDataError,
+  } = useFileData(selectedFileName);
 
   return (
-    <div>
-      <h1>Hello, React!</h1>
-      {!isFileListLoading && list && (
-        <Container>
-          <Container>
-            <span>
-              <h2>Select a file</h2>
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant={!!listError ? 'danger' : 'success'}
-                  id="dropdown-basic"
-                  disabled={!!listError}
-                >
-                  {selectedFileName || 'All Files'}
-                </Dropdown.Toggle>
+    <div className="background">
+      <div className="main-card">
+        <span className="header">
+          <span>File selected:</span>
+          {isFileDataLoading ? (
+            <Spinner animation="border" role="status" />
+          ) : (
+            <Dropdown>
+              <Dropdown.Toggle
+                variant={!!listError ? 'danger' : 'success'}
+                id="dropdown-basic"
+                disabled={!!listError}
+              >
+                {!!listError ? 'Cannot get fle list' : selectedFileName || 'All Files'}
+              </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  {list.map((item, i) => (
-                    <Dropdown.Item
-                      key={i}
-                      eventKey={i + 1}
-                      onClick={(e) => setSelectedFileName(e.target.innerText.split('.')[0])}
-                    >
-                      {item}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </span>
-          </Container>
-          <Container>
-            {isFileDataLoading ? <h1>Loading...</h1> : filesData && <MainTable files={filesData} />}
-          </Container>
-        </Container>
-      )}
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey={0} onClick={(e) => setSelectedFileName(null)}>
+                  All Files
+                </Dropdown.Item>
+                {list.map((item, i) => (
+                  <Dropdown.Item
+                    key={i}
+                    eventKey={i + 1}
+                    onClick={(e) => setSelectedFileName(e.target.innerText)}
+                  >
+                    {item}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+        </span>
+        <div className="table-container">
+          {!!filesDataError ? (
+            <div className="error-container">
+              <span className="warin-emoji">⚠️</span>
+              <h1>Oh No! An error occurred while getting file data!</h1>
+              <p>Try selecting other file.</p>
+            </div>
+          ) : (
+            filesData && <MainTable files={filesData} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

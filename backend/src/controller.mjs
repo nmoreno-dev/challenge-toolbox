@@ -17,41 +17,55 @@ async function getFileList(_, res) {
 }
 
 async function getFilesData(req, res) {
-  const { fileName } = req.query;
+  try {
+    const { fileName } = req.query;
 
-  if (fileName) {
-    const fileData = await filesService.getFileData(fileName);
-    const parsedData = dataParserService.parse(fileData);
-    if (parsedData) {
+    if (fileName) {
+      const fileData = await filesService.getFileData(fileName);
+      const parsedData = dataParserService.parse(fileData);
+      if (!parsedData)
+        return res.status(HttpStatusCode.UnprocessableEntity).json({
+          error: 'Unprocessable Entity',
+          status: HttpStatusCode.UnprocessableEntity,
+          message: `The file ${fileName} contains errors or incomplete data`,
+        });
+
       return res.status(HttpStatusCode.Ok).json([parsedData]);
     }
-  }
 
-  const filesList = await filesService.listFiles();
-  if (filesList === null) {
-    res.status(HttpStatusCode.InternalServerError).json({
+    // Si no viene el query param, continuar con todos los archivos
+    const filesList = await filesService.listFiles();
+    if (filesList === null) {
+      res.status(HttpStatusCode.InternalServerError).json({
+        error: 'Internal Server Error',
+        status: HttpStatusCode.InternalServerError,
+        message: 'An error occurred while getting the list of files',
+      });
+    }
+
+    const { files } = filesList;
+    const payload = [];
+
+    // realiza todas las peticiones a los datos de los archivos en paralelo, el manejo de errores en el
+    // service asegura que se resuelvan todas las promesas y el Promise.all no falle
+    const fileDataList = await Promise.all(files.map((file) => filesService.getFileData(file)));
+
+    for (const fileData of fileDataList) {
+      if (fileData === null) continue;
+      const parsedData = dataParserService.parse(fileData);
+      if (parsedData) {
+        payload.push(parsedData);
+      }
+    }
+
+    return res.status(HttpStatusCode.Ok).json(payload);
+  } catch (error) {
+    return res.status(HttpStatusCode.InternalServerError).json({
       error: 'Internal Server Error',
       status: HttpStatusCode.InternalServerError,
-      message: 'Ocurrió un error al obtener la lista de archivos',
+      message: 'An error occurred while processing the request',
     });
   }
-
-  const { files } = filesList;
-  const payload = [];
-
-  // realiza todas las peticiones a los datos de los archivos en paralelo, el manejo de errores en el
-  // service asegura que se resuelvan todas y el Promise.all no falle
-  const fileDataList = await Promise.all(files.map((file) => filesService.getFileData(file)));
-
-  for (const fileData of fileDataList) {
-    if (fileData === null) continue;
-    const parsedData = dataParserService.parse(fileData);
-    if (parsedData) {
-      payload.push(parsedData);
-    }
-  }
-
-  res.status(HttpStatusCode.Ok).json(payload);
 }
 
 export default {

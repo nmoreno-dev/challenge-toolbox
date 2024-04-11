@@ -39,8 +39,12 @@ export const useFileData = (fileName) => {
     try {
       const filesData = await appService.getFileData(fileName);
       setData(filesData);
+
+      if (error) {
+        setError(null);
+      }
     } catch (error) {
-      setError(true);
+      setError(error);
     }
     setIsLoading(false);
   };
